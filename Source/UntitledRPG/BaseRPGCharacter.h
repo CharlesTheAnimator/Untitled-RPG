@@ -15,6 +15,10 @@ public:
 	// Sets default values for this character's properties
 	ABaseRPGCharacter();
 
+	//BP_Menu options
+	UPROPERTY(EditAnywhere)
+	bool bMelee; 
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -26,8 +30,9 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	//Called by axis binds
+	// Called by axis binds
 	void MoveForward(float);
 	void MoveSideways(float);
-
+	// Called by attack bind
+	void InvokeAttack();
 };

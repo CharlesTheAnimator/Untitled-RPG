@@ -44,10 +44,12 @@ void ABaseRPGCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 { 
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	
-	/*Locomotion logic*/
+	/*Locomotion binding*/
 	InputComponent->BindAxis("MoveForward", this, &ABaseRPGCharacter::MoveForward);
 	InputComponent->BindAxis("MoveSideways", this, &ABaseRPGCharacter::MoveSideways);
 
+	/*Attack binding*/
+	
 }
 
 void ABaseRPGCharacter::MoveForward(float AxisValue)
