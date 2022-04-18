@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/BoxComponent.h"
 #include "GameFramework/Character.h"
 #include "BaseRPGCharacter.generated.h"
 
@@ -18,10 +19,17 @@ public:
 	//BP_Menu options
 	UPROPERTY(EditAnywhere)
 	bool bMelee; 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class UBoxComponent* BoxCollisionDefault;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+private: 
+	// Private base character data
+	FName MeleeSocket;
+	class USceneComponent* ROOT;
 
 public:	
 	// Called every frame

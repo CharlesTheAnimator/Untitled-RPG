@@ -21,7 +21,14 @@ ABaseRPGCharacter::ABaseRPGCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-
+	/*Initialize Socket FName*/
+	MeleeSocket = TEXT("URPGDefautlSocket");
+	
+	/*Initialize UboxComponents*/
+	ROOT = this->GetRootComponent();
+	BoxCollisionDefault = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollisionDefault"));
+	BoxCollisionDefault->SetupAttachment(ROOT);
+	
 }
 
 // Called when the game starts or when spawned
@@ -29,7 +36,9 @@ void ABaseRPGCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
-
+	/*Attach melee collision box to socket*/
+	const FAttachmentTransformRules BoxCollisionDefaultAttachmentRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
+	BoxCollisionDefault->AttachToComponent(GetMesh(), BoxCollisionDefaultAttachmentRules, (TEXT("URPGDefautlSocket")));
 }
 
 // Called every frame
@@ -49,7 +58,7 @@ void ABaseRPGCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	InputComponent->BindAxis("MoveSideways", this, &ABaseRPGCharacter::MoveSideways);
 
 	/*Attack binding*/
-	
+	//TODO
 }
 
 void ABaseRPGCharacter::MoveForward(float AxisValue)
