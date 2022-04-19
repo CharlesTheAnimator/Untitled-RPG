@@ -28,6 +28,7 @@ ABaseRPGCharacter::ABaseRPGCharacter()
 	ROOT = this->GetRootComponent();
 	BoxCollisionDefault = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollisionDefault"));
 	BoxCollisionDefault->SetupAttachment(ROOT);
+	BoxCollisionDefault->SetCollisionProfileName("NoCollision");
 	
 }
 
@@ -37,7 +38,10 @@ void ABaseRPGCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	/*Attach melee collision box to socket*/
-	const FAttachmentTransformRules BoxCollisionDefaultAttachmentRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, false);
+	const FAttachmentTransformRules BoxCollisionDefaultAttachmentRules(
+		EAttachmentRule::SnapToTarget, 
+		EAttachmentRule::SnapToTarget, 
+		EAttachmentRule::KeepWorld, false);
 	BoxCollisionDefault->AttachToComponent(GetMesh(), BoxCollisionDefaultAttachmentRules, (TEXT("URPGDefautlSocket")));
 }
 
