@@ -28,8 +28,10 @@ protected:
 
 private: 
 	// Private base character data
+	int BasicTimeDelay = 1;
 	FName MeleeSocket;
 	class USceneComponent* ROOT;
+	void DebugMethod();
 
 public:	
 	// Called every frame
@@ -42,5 +44,5 @@ public:
 	void MoveForward(float);
 	void MoveSideways(float);
 	// Called by attack bind
-	void InvokeAttack();
+	void BasicAttack();
 };
