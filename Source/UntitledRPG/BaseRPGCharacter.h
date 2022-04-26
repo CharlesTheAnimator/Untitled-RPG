@@ -16,6 +16,9 @@ public:
 	// Sets default values for this character's properties
 	ABaseRPGCharacter();
 
+	/** Returns CursorToWorld subobject **/
+	//FORCEINLINE class UDecalComponent* GetCursorToWorld() { return CursorToWorld; }
+
 	//BP_Menu options
 	UPROPERTY(EditAnywhere)
 	bool bMelee; 
@@ -45,4 +48,9 @@ public:
 	void MoveSideways(float);
 	// Called by attack bind
 	void BasicAttack();
+
+private:
+	/** A decal that projects to the cursor location. */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class UDecalComponent* CursorToWorld;
 };

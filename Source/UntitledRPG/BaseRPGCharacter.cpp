@@ -3,9 +3,12 @@
 
 #include "BaseRPGCharacter.h"
 #include "Components/InputComponent.h"
+#include "Components/DecalComponent.h"
 
 #include "Camera/CameraComponent.h"
 #include "Camera/PlayerCameraManager.h" 
+
+#include "UObject/ConstructorHelpers.h"
 
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -13,6 +16,8 @@
 #include "GameFramework/Actor.h"
 
 #include "Kismet/GameplayStatics.h"
+
+#include "Materials/Material.h"
 
 
 // Sets default values
@@ -30,6 +35,20 @@ ABaseRPGCharacter::ABaseRPGCharacter()
 	BoxCollisionDefault->SetupAttachment(ROOT);
 	BoxCollisionDefault->SetCollisionProfileName("NoCollision");
 	
+	// Create a decal in the world to show the cursor's location
+	CursorToWorld = CreateDefaultSubobject<UDecalComponent>("CursorToWorld");
+	CursorToWorld->SetupAttachment(RootComponent);
+	static ConstructorHelpers::FObjectFinder<UMaterial> DecalMaterialAsset(TEXT("Material'/Game/M_Cursor_Decal.M_Cursor_Decal'"));
+	if (DecalMaterialAsset.Succeeded())
+	{
+		CursorToWorld->SetDecalMaterial(DecalMaterialAsset.Object);
+	}
+	CursorToWorld->DecalSize = FVector(16.0f, 32.0f, 32.0f);
+	CursorToWorld->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f).Quaternion());
+
+	// Activate ticking in order to update the cursor every frame.
+	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bStartWithTickEnabled = true;
 }
 
 // Called when the game starts or when spawned
