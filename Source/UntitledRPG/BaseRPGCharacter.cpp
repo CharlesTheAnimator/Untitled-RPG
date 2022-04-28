@@ -34,10 +34,10 @@ ABaseRPGCharacter::ABaseRPGCharacter()
 	BoxCollisionDefault = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollisionDefault"));
 	BoxCollisionDefault->SetupAttachment(ROOT);
 	BoxCollisionDefault->SetCollisionProfileName("NoCollision");
-	
+
 	// Create a decal in the world to show the cursor's location
 	CursorToWorld = CreateDefaultSubobject<UDecalComponent>("CursorToWorld");
-	CursorToWorld->SetupAttachment(RootComponent);
+	//CursorToWorld->SetupAttachment(RootComponent);
 	static ConstructorHelpers::FObjectFinder<UMaterial> DecalMaterialAsset(TEXT("Material'/Game/M_Cursor_Decal.M_Cursor_Decal'"));
 	if (DecalMaterialAsset.Succeeded())
 	{
@@ -49,6 +49,7 @@ ABaseRPGCharacter::ABaseRPGCharacter()
 	// Activate ticking in order to update the cursor every frame.
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
+
 }
 
 // Called when the game starts or when spawned
@@ -62,6 +63,7 @@ void ABaseRPGCharacter::BeginPlay()
 		EAttachmentRule::SnapToTarget, 
 		EAttachmentRule::KeepWorld, false);
 	BoxCollisionDefault->AttachToComponent(GetMesh(), BoxCollisionDefaultAttachmentRules, (TEXT("URPGDefautlSocket")));
+
 }
 
 // Called every frame
@@ -69,6 +71,17 @@ void ABaseRPGCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (CursorToWorld != nullptr) {
+		if (APlayerController* PC = Cast<APlayerController>(GetController()))
+		{
+			FHitResult TraceHitResult;
+			PC->GetHitResultUnderCursor(ECC_Visibility, true, TraceHitResult);
+			FVector CursorFV = TraceHitResult.ImpactNormal;
+			FRotator CursorR = CursorFV.Rotation();
+			CursorToWorld->SetWorldLocation(TraceHitResult.Location);
+			CursorToWorld->SetWorldRotation(CursorR);
+		}
+	}
 }
 
 // Called to bind functionality to input

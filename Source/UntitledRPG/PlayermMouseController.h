@@ -18,8 +18,6 @@ protected:
 	virtual void SetupInputComponent() override;
 	virtual void PlayerTick(float DeltaTime) override;
 
-	void MouseTrack();
-
 public:
 	APlayermMouseController();
 

@@ -11,6 +11,7 @@ APlayermMouseController::APlayermMouseController()
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Crosshairs;
 
+
 }
 
 void APlayermMouseController::SetupInputComponent()
@@ -27,18 +28,4 @@ void APlayermMouseController::PlayerTick(float DeltaTime)
 
 	Super::PlayerTick(DeltaTime);
 
-	if (true) {
-		//Call mouse track
-	}
-}
-
-void APlayermMouseController::MouseTrack()
-{
-	//float mouseX, mouseY;
-	//APlayerController* controller = Cast<APlayerController>(GetController());
-	//controller->GetMousePosition(mouseX, mouseY);
-
-
-	//FVector2D* screenPos = new FVector2D(mouseX, mouseY);
-	//controller->GetHitResultAtScreenPosition(*screenPos, ECC_Visibility, false, Hit);
 }
