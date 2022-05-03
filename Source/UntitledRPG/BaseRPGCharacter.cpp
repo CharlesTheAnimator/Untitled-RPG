@@ -23,9 +23,6 @@
 // Sets default values
 ABaseRPGCharacter::ABaseRPGCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
 	/*Initialize Socket FName*/
 	MeleeSocket = TEXT("URPGDefautlSocket");
 	
@@ -35,16 +32,14 @@ ABaseRPGCharacter::ABaseRPGCharacter()
 	BoxCollisionDefault->SetupAttachment(ROOT);
 	BoxCollisionDefault->SetCollisionProfileName("NoCollision");
 
-	// Create a decal in the world to show the cursor's location
+	/* Create a decal in the world to show the cursor's location*/
 	CursorToWorld = CreateDefaultSubobject<UDecalComponent>("CursorToWorld");
-	//CursorToWorld->SetupAttachment(RootComponent);
+	CursorToWorld->SetupAttachment(RootComponent);
 	static ConstructorHelpers::FObjectFinder<UMaterial> DecalMaterialAsset(TEXT("Material'/Game/M_Cursor_Decal.M_Cursor_Decal'"));
 	if (DecalMaterialAsset.Succeeded())
 	{
 		CursorToWorld->SetDecalMaterial(DecalMaterialAsset.Object);
 	}
-	CursorToWorld->DecalSize = FVector(16.0f, 32.0f, 32.0f);
-	CursorToWorld->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f).Quaternion());
 
 	// Activate ticking in order to update the cursor every frame.
 	PrimaryActorTick.bCanEverTick = true;
@@ -64,6 +59,9 @@ void ABaseRPGCharacter::BeginPlay()
 		EAttachmentRule::KeepWorld, false);
 	BoxCollisionDefault->AttachToComponent(GetMesh(), BoxCollisionDefaultAttachmentRules, (TEXT("URPGDefautlSocket")));
 
+	/*Spawn Decal Asset*/
+	CursorToWorld->DecalSize = FVector(16.0f, 32.0f, 32.0f);
+	CursorToWorld->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f).Quaternion());
 }
 
 // Called every frame
@@ -125,10 +123,10 @@ void ABaseRPGCharacter::BasicAttack()
 		BoxCollisionDefault->SetCollisionProfileName("MeleeAttack");
 		FTimerDelegate TimerDelegate;
 		TimerDelegate.BindLambda([&]
-			{
-				UE_LOG(LogTemp, Warning, TEXT("This text will appear in the console 1 seconds after execution"));
-				BoxCollisionDefault->SetCollisionProfileName("NoCollision");
-			});
+		{
+			UE_LOG(LogTemp, Warning, TEXT("This text will appear in the console 1 seconds after execution"));
+			BoxCollisionDefault->SetCollisionProfileName("NoCollision");
+		});
 
 		FTimerHandle TimerHandle;
 		GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, 1, false);
