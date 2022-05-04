@@ -31,7 +31,6 @@ private:
 	int BasicTimeDelay = 1;
 	FName MeleeSocket;
 	class USceneComponent* ROOT;
-	void DebugMethod();
 
 public:	
 	// Called every frame

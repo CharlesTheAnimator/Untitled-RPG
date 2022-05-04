@@ -28,13 +28,18 @@ ABaseRPGCharacter::ABaseRPGCharacter()
 	/*Init Skeletal Mesh Component*/
 	//TODO
 
+	/*Init Pawn controller Setting*/
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationYaw = false;
+	bUseControllerRotationRoll = false;
+
 	/*Initialize UboxComponents*/
 	ROOT = this->GetRootComponent();
 	BoxCollisionDefault = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollisionDefault"));
 	BoxCollisionDefault->SetupAttachment(ROOT);
 	BoxCollisionDefault->SetCollisionProfileName("NoCollision");
 
-	/* Create a decal in the world to show the cursor's location*/
+	/* Init a decal in the world to show the cursor's location*/
 	CursorToWorld = CreateDefaultSubobject<UDecalComponent>("CursorToWorld");
 	CursorToWorld->SetupAttachment(ROOT);
 	static ConstructorHelpers::FObjectFinder<UMaterial> DecalMaterialAsset(TEXT("Material'/Game/M_Cursor_Decal.M_Cursor_Decal'"));
@@ -43,10 +48,10 @@ ABaseRPGCharacter::ABaseRPGCharacter()
 		CursorToWorld->SetDecalMaterial(DecalMaterialAsset.Object);
 	}
 
-	/*Initialize Movement settings*/
+	/*Initialize Movement & Starting Orientation settings*/
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
-	GetCharacterMovement()->RotationRate = FRotator(0.0f, -360.0f, 0.0f);
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 360.0f, 0.0f);
 	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -90.0f), FQuat(FRotator(0.0f, -90.0f, 0.0f)));
 
 	// Activate ticking in order to update the cursor every frame.
@@ -65,7 +70,10 @@ void ABaseRPGCharacter::BeginPlay()
 		EAttachmentRule::SnapToTarget, 
 		EAttachmentRule::SnapToTarget, 
 		EAttachmentRule::KeepWorld, false);
-	BoxCollisionDefault->AttachToComponent(GetMesh(), BoxCollisionDefaultAttachmentRules, (TEXT("URPGDefautlSocket")));
+	BoxCollisionDefault->AttachToComponent(
+		GetMesh(), 
+		BoxCollisionDefaultAttachmentRules, 
+		(TEXT("URPGDefautlSocket")));
 
 	/*Spawn Decal Asset*/
 	CursorToWorld->DecalSize = FVector(16.0f, 32.0f, 32.0f);
