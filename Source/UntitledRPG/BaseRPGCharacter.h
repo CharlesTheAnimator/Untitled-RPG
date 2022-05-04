@@ -55,6 +55,5 @@ private:
 	class UDecalComponent* CursorToWorld;
 
 	/*Skeletal Mesh Component*/
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	//class USkeletalMeshComponent* MeshToWorld;
+	//TODO
 };

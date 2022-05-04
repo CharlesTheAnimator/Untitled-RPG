@@ -26,13 +26,7 @@ ABaseRPGCharacter::ABaseRPGCharacter()
 	MeleeSocket = TEXT("URPGDefautlSocket");
 	
 	/*Init Skeletal Mesh Component*/
-	//MeshToWorld = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MeshToWorld"));
-	//MeshToWorld->SetupAttachment(ROOT);
-	//static ConstructorHelpers::FObjectFinder<USkeletalMesh> CharMesh(TEXT("SkeletalMesh'/Game/Default_SphereMesh/Sphere_Sphere.Sphere_Sphere'"));
-	//if (CharMesh.Succeeded())
-	//{
-	//	MeshToWorld->SetSkeletalMesh(CharMesh);
-	//}
+	//TODO
 
 	/*Initialize UboxComponents*/
 	ROOT = this->GetRootComponent();
