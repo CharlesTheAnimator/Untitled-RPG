@@ -19,7 +19,7 @@ void APlayermMouseController::SetupInputComponent()
 	Super::SetupInputComponent();
 
 	/*Set up input component*/
-	//TODO
+	//TODO mv importan relevant binding to here
 
 }
 

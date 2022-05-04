@@ -19,13 +19,21 @@
 
 #include "Materials/Material.h"
 
-
 // Sets default values
 ABaseRPGCharacter::ABaseRPGCharacter()
 {
 	/*Initialize Socket FName*/
 	MeleeSocket = TEXT("URPGDefautlSocket");
 	
+	/*Init Skeletal Mesh Component*/
+	//MeshToWorld = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MeshToWorld"));
+	//MeshToWorld->SetupAttachment(ROOT);
+	//static ConstructorHelpers::FObjectFinder<USkeletalMesh> CharMesh(TEXT("SkeletalMesh'/Game/Default_SphereMesh/Sphere_Sphere.Sphere_Sphere'"));
+	//if (CharMesh.Succeeded())
+	//{
+	//	MeshToWorld->SetSkeletalMesh(CharMesh);
+	//}
+
 	/*Initialize UboxComponents*/
 	ROOT = this->GetRootComponent();
 	BoxCollisionDefault = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollisionDefault"));
@@ -34,12 +42,18 @@ ABaseRPGCharacter::ABaseRPGCharacter()
 
 	/* Create a decal in the world to show the cursor's location*/
 	CursorToWorld = CreateDefaultSubobject<UDecalComponent>("CursorToWorld");
-	CursorToWorld->SetupAttachment(RootComponent);
+	CursorToWorld->SetupAttachment(ROOT);
 	static ConstructorHelpers::FObjectFinder<UMaterial> DecalMaterialAsset(TEXT("Material'/Game/M_Cursor_Decal.M_Cursor_Decal'"));
 	if (DecalMaterialAsset.Succeeded())
 	{
 		CursorToWorld->SetDecalMaterial(DecalMaterialAsset.Object);
 	}
+
+	/*Initialize Movement settings*/
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetCharacterMovement()->bUseControllerDesiredRotation = true;
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, -360.0f, 0.0f);
+	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -90.0f), FQuat(FRotator(0.0f, -90.0f, 0.0f)));
 
 	// Activate ticking in order to update the cursor every frame.
 	PrimaryActorTick.bCanEverTick = true;
@@ -86,7 +100,7 @@ void ABaseRPGCharacter::Tick(float DeltaTime)
 void ABaseRPGCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 { 
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	
+
 	/*Locomotion binding*/
 	InputComponent->BindAxis("MoveForward", this, &ABaseRPGCharacter::MoveForward);
 	InputComponent->BindAxis("MoveSideways", this, &ABaseRPGCharacter::MoveSideways);
