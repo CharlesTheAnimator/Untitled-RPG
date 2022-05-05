@@ -2,6 +2,8 @@
 
 
 #include "BaseRPGCharacter.h"
+#include "PlayermMouseController.h"
+
 #include "Components/InputComponent.h"
 #include "Components/DecalComponent.h"
 
@@ -50,8 +52,9 @@ ABaseRPGCharacter::ABaseRPGCharacter()
 
 	/*Initialize Movement & Starting Orientation settings*/
 	GetCharacterMovement()->bOrientRotationToMovement = true;
-	GetCharacterMovement()->bUseControllerDesiredRotation = true;
-	GetCharacterMovement()->RotationRate = FRotator(0.0f, 360.0f, 0.0f);
+	GetCharacterMovement()->bUseControllerDesiredRotation = false;
+	GetCharacterMovement()->bIgnoreBaseRotation = true;
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 640.0f, 0.0f);
 	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -90.0f), FQuat(FRotator(0.0f, -90.0f, 0.0f)));
 
 	// Activate ticking in order to update the cursor every frame.
@@ -108,14 +111,16 @@ void ABaseRPGCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	InputComponent->BindAxis("MoveSideways", this, &ABaseRPGCharacter::MoveSideways);
 
 	/*Attack binding*/
-	InputComponent->BindAction("BasicAttack", EInputEvent::IE_Pressed, this, &ABaseRPGCharacter::BasicAttack); 
+	//InputComponent->BindAction("BasicAttack", EInputEvent::IE_Pressed, this, &ABaseRPGCharacter::BasicAttack); 
 }
 
 void ABaseRPGCharacter::MoveForward(float AxisValue)
 {
+	//Controller should be oriented to world axis
+	//Only need yaw rotation Pitch and roll do not effect move forward or backward
 	if (Controller != nullptr && AxisValue != 0) {
-		const FRotator Roto = Controller->GetControlRotation();		//Controller should be oriented to world axis
-		const FRotator YawRoto(0, Roto.Yaw, 0);						//Only need yaw rotation (Pitch and roll do not effect move forward or backward
+		const FRotator Roto = Controller->GetControlRotation();		
+		const FRotator YawRoto(0, Roto.Yaw, 0);						
 		
 		const FVector Direction = FRotationMatrix(YawRoto).GetUnitAxis(EAxis::X);
 		AddMovementInput(Direction, AxisValue);
@@ -133,19 +138,20 @@ void ABaseRPGCharacter::MoveSideways(float AxisValue)
 	}
 }
 
-void ABaseRPGCharacter::BasicAttack()
-{
-	if (Controller != nullptr) {
-		BoxCollisionDefault->SetCollisionProfileName("MeleeAttack");
-		FTimerDelegate TimerDelegate;
-		TimerDelegate.BindLambda([&]
-		{
-			UE_LOG(LogTemp, Warning, TEXT("This text will appear in the console 1 seconds after execution"));
-			BoxCollisionDefault->SetCollisionProfileName("NoCollision");
-		});
-
-		FTimerHandle TimerHandle;
-		GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, 1, false);
-	}
-}
-
+//void ABaseRPGCharacter::BasicAttack()
+//{
+//	if (Controller != nullptr) {
+//		/*Collision manipulation*/
+//		BoxCollisionDefault->SetCollisionProfileName("MeleeAttack");
+//		
+//		/*Call to time delay after basicAttack is invoked*/
+//		FTimerDelegate TimerDelegate;
+//		TimerDelegate.BindLambda([&]
+//		{
+//			UE_LOG(LogTemp, Warning, TEXT("This text will appear in the console 1 seconds after execution"));
+//			BoxCollisionDefault->SetCollisionProfileName("NoCollision");
+//		});
+//		FTimerHandle TimerHandle;
+//		GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, 1, false);
+//	}
+//}

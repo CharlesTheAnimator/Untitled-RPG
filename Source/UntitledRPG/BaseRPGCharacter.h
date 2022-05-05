@@ -43,7 +43,7 @@ public:
 	void MoveForward(float);
 	void MoveSideways(float);
 	// Called by attack bind
-	void BasicAttack();
+	//void BasicAttack();
 
 	/** Returns CursorToWorld subobject **/
 	FORCEINLINE class UDecalComponent* GetCursorToWorld() { return CursorToWorld; }

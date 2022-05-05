@@ -21,6 +21,8 @@ protected:
 public:
 	APlayermMouseController();
 
-
-
+private:
+	bool bAttacking;
+	void StartBasicAttacking();
+	void EndBasicAttacking();
 };
