@@ -32,28 +32,39 @@ void APlayermMouseController::PlayerTick(float DeltaTime)
 
 	Super::PlayerTick(DeltaTime);
 
+	if (bAttacking)
+	{
+		APawn* const MyPawn = GetPawn();
+		if (MyPawn) {
+			//UE_LOG(LogTemp, Warning, TEXT("MyPawn Worked"));
+			FVector PawnLoaction;
+			PawnLoaction = MyPawn->GetMovementComponent()->GetActorLocation();
+
+			FHitResult Cursor;
+			this->GetHitResultUnderCursor(ECC_Visibility, true, Cursor);
+			FVector CursorLocation;
+			CursorLocation = Cursor.Location;
+
+			FVector LookDirection = CursorLocation - PawnLoaction;
+			MyPawn->SetActorRotation(LookDirection.Rotation(), ETeleportType::TeleportPhysics);
+		}
+	}
+
 }
 
 void APlayermMouseController::StartBasicAttacking()
 {
-	APawn* const MyPawn = GetPawn();
-	if (MyPawn) {
-		UE_LOG(LogTemp, Warning, TEXT("MyPawn Worked"));
-		FVector PawnLoaction;
-		PawnLoaction = MyPawn->GetMovementComponent()->GetActorLocation();
+	ABaseRPGCharacter* CharacterPawn = Cast<ABaseRPGCharacter>(GetCharacter());
+	CharacterPawn->GetCharacterMovement()->bOrientRotationToMovement = false;
 
-		FHitResult Cursor;
-		this->GetHitResultUnderCursor(ECC_Visibility, true, Cursor);
-		FVector CursorLocation;
-		CursorLocation = Cursor.Location;
-
-		FVector LookDirection = CursorLocation - PawnLoaction;
-		MyPawn->SetActorRotation(LookDirection.Rotation());
-	}
+	bAttacking = true;
 }
 
 void APlayermMouseController::EndBasicAttacking()
 {
-
+	ABaseRPGCharacter* CharacterPawn = Cast<ABaseRPGCharacter>(GetCharacter());
+	CharacterPawn->GetCharacterMovement()->bOrientRotationToMovement = true
+		;
+	bAttacking = false;
 }
 
