@@ -112,6 +112,7 @@ void APlayermMouseController::RotateToCursor()
 		CursorLocation = Cursor.Location;
 
 		LookDirection = CursorLocation - PawnLocation;
+		LookDirection.Normalize();
 		MyPawn->SetActorRotation(LookDirection.Rotation(), ETeleportType::TeleportPhysics);
 	}
 }
