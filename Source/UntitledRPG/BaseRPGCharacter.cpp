@@ -120,7 +120,7 @@ void ABaseRPGCharacter::MoveForward(float AxisValue)
 	//Only need yaw rotation Pitch and roll do not effect move forward or backward
 	if (Controller != nullptr && AxisValue != 0) {
 		const FRotator Roto = Controller->GetControlRotation();		
-		const FRotator YawRoto(0, Roto.Yaw, 0);						
+		const FRotator YawRoto(0, Roto.Yaw, 0);				
 		
 		const FVector Direction = FRotationMatrix(YawRoto).GetUnitAxis(EAxis::X);
 		AddMovementInput(Direction, AxisValue);

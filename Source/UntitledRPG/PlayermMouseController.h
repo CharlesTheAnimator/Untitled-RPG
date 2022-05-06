@@ -23,6 +23,15 @@ public:
 
 private:
 	bool bAttacking;
+	bool bAttackCollide;
+	bool bMeshCollide;
+	float DashDistance = 100;
+	FVector LookDirection;
+
 	void StartBasicAttacking();
 	void EndBasicAttacking();
+	void DashInDirection();
+	void InvokeShieldBuff();
+
+	void RotateToCursor();
 };
