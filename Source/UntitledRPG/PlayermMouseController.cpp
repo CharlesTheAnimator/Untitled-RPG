@@ -49,13 +49,13 @@ void APlayermMouseController::PlayerTick(float DeltaTime)
 			MyPawn->SetActorRotation(LookDirection.Rotation(), ETeleportType::TeleportPhysics);
 		}
 	}
-
 }
 
 void APlayermMouseController::StartBasicAttacking()
 {
 	ABaseRPGCharacter* CharacterPawn = Cast<ABaseRPGCharacter>(GetCharacter());
 	CharacterPawn->GetCharacterMovement()->bOrientRotationToMovement = false;
+	CharacterPawn->BoxCollisionDefault->SetCollisionProfileName("MeleeAttack");
 
 	bAttacking = true;
 }
@@ -63,8 +63,8 @@ void APlayermMouseController::StartBasicAttacking()
 void APlayermMouseController::EndBasicAttacking()
 {
 	ABaseRPGCharacter* CharacterPawn = Cast<ABaseRPGCharacter>(GetCharacter());
-	CharacterPawn->GetCharacterMovement()->bOrientRotationToMovement = true
-		;
+	CharacterPawn->GetCharacterMovement()->bOrientRotationToMovement = true;
+	CharacterPawn->BoxCollisionDefault->SetCollisionProfileName("NoCollision");
+
 	bAttacking = false;
 }
-

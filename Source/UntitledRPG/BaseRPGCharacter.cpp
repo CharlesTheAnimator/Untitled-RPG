@@ -68,11 +68,13 @@ void ABaseRPGCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	/*Attach melee collision box to socket*/
+	/*Init FAttachmentTransformRules*/
 	const FAttachmentTransformRules BoxCollisionDefaultAttachmentRules(
 		EAttachmentRule::SnapToTarget, 
 		EAttachmentRule::SnapToTarget, 
 		EAttachmentRule::KeepWorld, false);
+
+	/*Attach melee collision box to socket*/
 	BoxCollisionDefault->AttachToComponent(
 		GetMesh(), 
 		BoxCollisionDefaultAttachmentRules, 
@@ -110,8 +112,6 @@ void ABaseRPGCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	InputComponent->BindAxis("MoveForward", this, &ABaseRPGCharacter::MoveForward);
 	InputComponent->BindAxis("MoveSideways", this, &ABaseRPGCharacter::MoveSideways);
 
-	/*Attack binding*/
-	//InputComponent->BindAction("BasicAttack", EInputEvent::IE_Pressed, this, &ABaseRPGCharacter::BasicAttack); 
 }
 
 void ABaseRPGCharacter::MoveForward(float AxisValue)
@@ -137,21 +137,3 @@ void ABaseRPGCharacter::MoveSideways(float AxisValue)
 		AddMovementInput(Direction, AxisValue);
 	}
 }
-
-//void ABaseRPGCharacter::BasicAttack()
-//{
-//	if (Controller != nullptr) {
-//		/*Collision manipulation*/
-//		BoxCollisionDefault->SetCollisionProfileName("MeleeAttack");
-//		
-//		/*Call to time delay after basicAttack is invoked*/
-//		FTimerDelegate TimerDelegate;
-//		TimerDelegate.BindLambda([&]
-//		{
-//			UE_LOG(LogTemp, Warning, TEXT("This text will appear in the console 1 seconds after execution"));
-//			BoxCollisionDefault->SetCollisionProfileName("NoCollision");
-//		});
-//		FTimerHandle TimerHandle;
-//		GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, 1, false);
-//	}
-//}
