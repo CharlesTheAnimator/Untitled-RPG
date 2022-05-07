@@ -50,12 +50,19 @@ ABaseRPGCharacter::ABaseRPGCharacter()
 		CursorToWorld->SetDecalMaterial(DecalMaterialAsset.Object);
 	}
 
-	/*Initialize Movement & Starting Orientation settings*/
+	/* Initialize Movement & Starting Orientation settings*/
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->bUseControllerDesiredRotation = false;
 	GetCharacterMovement()->bIgnoreBaseRotation = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 640.0f, 0.0f);
 	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -90.0f), FQuat(FRotator(0.0f, -90.0f, 0.0f)));
+
+	/* Init Shield Mesh VFX Component*/
+	ConstructorHelpers::FObjectFinder<UStaticMesh> ShieldToMesh(TEXT("StaticMesh'/Game/Default_SphereMesh/Cube.Cube'"));
+	ShieldMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShieldMesh"));
+	ShieldMesh->SetStaticMesh(ShieldToMesh.Object);
+	ShieldMesh->SetupAttachment(ROOT);
+	ShieldMesh->SetCollisionProfileName("NoCollision");
 
 	// Activate ticking in order to update the cursor every frame.
 	PrimaryActorTick.bCanEverTick = true;
@@ -69,15 +76,22 @@ void ABaseRPGCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	/*Init FAttachmentTransformRules*/
-	const FAttachmentTransformRules BoxCollisionDefaultAttachmentRules(
+	const FAttachmentTransformRules MyDefaultAttachmentRules(
 		EAttachmentRule::SnapToTarget, 
 		EAttachmentRule::SnapToTarget, 
 		EAttachmentRule::KeepWorld, false);
 
+	/*Attach Shield mesh VFX*/
+	ShieldMesh->AttachToComponent(
+		GetMesh(),
+		MyDefaultAttachmentRules,
+		(TEXT("SphereSocket")));
+	ShieldMesh->SetVisibility(false);
+
 	/*Attach melee collision box to socket*/
 	BoxCollisionDefault->AttachToComponent(
 		GetMesh(), 
-		BoxCollisionDefaultAttachmentRules, 
+		MyDefaultAttachmentRules,
 		(TEXT("URPGDefautlSocket")));
 
 	/*Spawn Decal Asset*/

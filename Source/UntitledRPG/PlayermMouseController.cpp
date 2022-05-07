@@ -1,5 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "PlayermMouseController.h"
+#include "BaseRPGCharacter.h"
+
 #include "Kismet/GameplayStatics.h"
 
 #include "GameFramework/Actor.h"
@@ -8,15 +11,13 @@
 
 #include "Math/Vector.h" 
 
-#include "PlayermMouseController.h"
-#include "BaseRPGCharacter.h"
-
 APlayermMouseController::APlayermMouseController()
 {
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Crosshairs;
 	bAttacking = false;
 	LookDirection = FVector(0.0f, 0.0f, 0.0f);
+
 }
 
 void APlayermMouseController::SetupInputComponent()
@@ -30,6 +31,8 @@ void APlayermMouseController::SetupInputComponent()
 
 	InputComponent->BindAction("ShiledBuffActivate", IE_Pressed, this, &APlayermMouseController::InvokeShieldBuff);
 }
+
+
 
 void APlayermMouseController::PlayerTick(float DeltaTime)
 {
@@ -94,11 +97,6 @@ void APlayermMouseController::DashInDirection()
 	GetWorld()->GetTimerManager().SetTimer(Handle, TimerCallback, 0.1f, false);
 }
 
-void APlayermMouseController::InvokeShieldBuff()
-{
-
-}
-
 void APlayermMouseController::RotateToCursor()
 {
 	APawn* const MyPawn = GetPawn();
@@ -117,3 +115,7 @@ void APlayermMouseController::RotateToCursor()
 	}
 }
 
+void APlayermMouseController::InvokeShieldBuff()
+{
+
+}

@@ -21,11 +21,12 @@ protected:
 public:
 	APlayermMouseController();
 
+
 private:
 	bool bAttacking;
 	bool bAttackCollide;
 	bool bMeshCollide;
-	float DashDistance = 100;
+	float DashDistance = 5000;
 	FVector LookDirection;
 
 	void StartBasicAttacking();
