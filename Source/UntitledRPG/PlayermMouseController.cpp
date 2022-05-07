@@ -78,7 +78,7 @@ void APlayermMouseController::DashInDirection()
 		PlayerCharacter->BoxCollisionDefault->SetCollisionProfileName("MeleeAttack");
 		FVector DashDirection = PlayerCharacter->GetActorForwardVector();
 		if (DashDirection.Normalize()) {
-			PlayerCharacter->GetMovementComponent()->Velocity = DashDirection * 5000.0f;
+			PlayerCharacter->GetMovementComponent()->Velocity = DashDirection * DashDistance;
 			UE_LOG(LogTemp, Warning, TEXT("Vecotr Is normalizing"));
 		}
 	}
@@ -117,5 +117,22 @@ void APlayermMouseController::RotateToCursor()
 
 void APlayermMouseController::InvokeShieldBuff()
 {
+	ABaseRPGCharacter* PlayerCharacter = Cast<ABaseRPGCharacter>(GetCharacter());
+	if (PlayerCharacter) {
+		PlayerCharacter->ShieldMesh->SetVisibility(true);
+		/*set Collision change TODO*/
+	}
 
+	FTimerDelegate TimerCallback;
+	TimerCallback.BindLambda([&]
+	{
+		ABaseRPGCharacter* PlayerCharacter = Cast<ABaseRPGCharacter>(GetCharacter());
+		if (PlayerCharacter) {
+			PlayerCharacter->ShieldMesh->SetVisibility(false);
+			/*set Collision change TODO*/
+		}
+	});
+
+	FTimerHandle Handle;
+	GetWorld()->GetTimerManager().SetTimer(Handle, TimerCallback, 2.0f, false);
 }
