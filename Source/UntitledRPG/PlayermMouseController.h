@@ -20,10 +20,11 @@ protected:
 
 public:
 	APlayermMouseController();
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool bAttacking;
 
 
 private:
-	bool bAttacking;
 	bool bAttackCollide;
 	bool bMeshCollide;
 	float DashDistance = 5000;

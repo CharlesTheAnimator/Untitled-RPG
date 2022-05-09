@@ -48,6 +48,9 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	UStaticMeshComponent* ShieldMesh;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
+	UAnimMontage* BasicAtk;
+
 	/** Returns CursorToWorld subobject **/
 	FORCEINLINE class UDecalComponent* GetCursorToWorld() { return CursorToWorld; }
 

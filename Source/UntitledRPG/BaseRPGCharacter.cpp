@@ -85,7 +85,7 @@ void ABaseRPGCharacter::BeginPlay()
 	ShieldMesh->AttachToComponent(
 		GetMesh(),
 		MyDefaultAttachmentRules,
-		(TEXT("SphereSocket")));
+		(TEXT("URPGCenterSocket")));
 	ShieldMesh->SetVisibility(false);
 
 	/*Attach melee collision box to socket*/

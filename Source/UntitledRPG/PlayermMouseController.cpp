@@ -51,6 +51,7 @@ void APlayermMouseController::StartBasicAttacking()
 	{
 		CharacterPawn->GetCharacterMovement()->bOrientRotationToMovement = false;
 		CharacterPawn->BoxCollisionDefault->SetCollisionProfileName("MeleeAttack");
+		CharacterPawn->PlayAnimMontage(CharacterPawn->BasicAtk);
 	}
 
 	bAttacking = true;
