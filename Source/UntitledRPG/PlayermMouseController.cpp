@@ -13,23 +13,28 @@
 
 APlayermMouseController::APlayermMouseController()
 {
+	/*Init Controller variables*/
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Crosshairs;
 	bAttacking = false;
 	LookDirection = FVector(0.0f, 0.0f, 0.0f);
-
 }
 
 void APlayermMouseController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
+	/*Init Action Bindings*///TODO: Rename to more modular calls
+	//LMB
 	InputComponent->BindAction("SetBasicAttacking", IE_Pressed, this, &APlayermMouseController::StartBasicAttacking);
 	InputComponent->BindAction("SetBasicAttacking", IE_Released, this, &APlayermMouseController::EndBasicAttacking);
-
+	//E
 	InputComponent->BindAction("DashActivate", IE_Pressed, this, &APlayermMouseController::DashInDirection);
-
+	//Q
 	InputComponent->BindAction("ShiledBuffActivate", IE_Pressed, this, &APlayermMouseController::InvokeShieldBuff);
+
+	/*Init Axis Bindings*/
+
 }
 
 
@@ -39,11 +44,12 @@ void APlayermMouseController::PlayerTick(float DeltaTime)
 	Super::PlayerTick(DeltaTime);
 
 	if (bAttacking)
-	{
+	{/*true: orient to cursor*/
 		RotateToCursor();
 	}
 }
 
+/*Basic Attack Function Definitions*/
 void APlayermMouseController::StartBasicAttacking()
 {
 	ABaseRPGCharacter* CharacterPawn = Cast<ABaseRPGCharacter>(GetCharacter());
@@ -56,7 +62,6 @@ void APlayermMouseController::StartBasicAttacking()
 
 	bAttacking = true;
 }
-
 void APlayermMouseController::EndBasicAttacking()
 {
 	ABaseRPGCharacter* CharacterPawn = Cast<ABaseRPGCharacter>(GetCharacter());
@@ -70,22 +75,24 @@ void APlayermMouseController::EndBasicAttacking()
 
 }
 
+/*E Action Bound Function Definition*/
 void APlayermMouseController::DashInDirection()
 {
 	RotateToCursor();
 
+	/*Invoke MovementComponent Velocity*/
 	ABaseRPGCharacter* PlayerCharacter = Cast<ABaseRPGCharacter>(GetCharacter());
 	if (PlayerCharacter) {
 		PlayerCharacter->BoxCollisionDefault->SetCollisionProfileName("MeleeAttack");
 		FVector DashDirection = PlayerCharacter->GetActorForwardVector();
 		if (DashDirection.Normalize()) {
 			PlayerCharacter->GetMovementComponent()->Velocity = DashDirection * DashDistance;
-			UE_LOG(LogTemp, Warning, TEXT("Vecotr Is normalizing"));
 		}
 	}
-	UE_LOG(LogTemp, Warning, TEXT("DashInDirection is being invoked"));
 
+	/*Time delayed Collision to NoCollision*/
 	FTimerDelegate TimerCallback;
+	FTimerHandle Handle;
 	TimerCallback.BindLambda([&]
 	{ 
 		ABaseRPGCharacter* PlayerCharacter = Cast<ABaseRPGCharacter>(GetCharacter());
@@ -93,13 +100,37 @@ void APlayermMouseController::DashInDirection()
 			PlayerCharacter->BoxCollisionDefault->SetCollisionProfileName("NoCollision");
 		}
 	});
-
-	FTimerHandle Handle;
 	GetWorld()->GetTimerManager().SetTimer(Handle, TimerCallback, 0.1f, false);
 }
 
+/*Q Action bond Function Definition*/
+void APlayermMouseController::InvokeShieldBuff()
+{
+	/*Invoke Q Character Ability*/
+	ABaseRPGCharacter* PlayerCharacter = Cast<ABaseRPGCharacter>(GetCharacter());
+	if (PlayerCharacter) {
+		PlayerCharacter->ShieldMesh->SetVisibility(true);
+		/*set Collision change TODO*/
+	}
+
+	/*Time delayed visibility switch to false*/
+	FTimerDelegate TimerCallback;
+	FTimerHandle Handle;
+	TimerCallback.BindLambda([&]
+	{
+		ABaseRPGCharacter* PlayerCharacter = Cast<ABaseRPGCharacter>(GetCharacter());
+		if (PlayerCharacter) {
+			PlayerCharacter->ShieldMesh->SetVisibility(false);
+			/*set Collision change TODO*/
+		}
+	});
+	GetWorld()->GetTimerManager().SetTimer(Handle, TimerCallback, 2.0f, false);
+}
+
+/*Rotate to Cursor Definition*/
 void APlayermMouseController::RotateToCursor()
 {
+	/*Rotate Character to face hit space beneath cursor*/
 	APawn* const MyPawn = GetPawn();
 	if (MyPawn) {
 		FVector PawnLocation;
@@ -114,26 +145,4 @@ void APlayermMouseController::RotateToCursor()
 		LookDirection.Normalize();
 		MyPawn->SetActorRotation(LookDirection.Rotation(), ETeleportType::TeleportPhysics);
 	}
-}
-
-void APlayermMouseController::InvokeShieldBuff()
-{
-	ABaseRPGCharacter* PlayerCharacter = Cast<ABaseRPGCharacter>(GetCharacter());
-	if (PlayerCharacter) {
-		PlayerCharacter->ShieldMesh->SetVisibility(true);
-		/*set Collision change TODO*/
-	}
-
-	FTimerDelegate TimerCallback;
-	TimerCallback.BindLambda([&]
-	{
-		ABaseRPGCharacter* PlayerCharacter = Cast<ABaseRPGCharacter>(GetCharacter());
-		if (PlayerCharacter) {
-			PlayerCharacter->ShieldMesh->SetVisibility(false);
-			/*set Collision change TODO*/
-		}
-	});
-
-	FTimerHandle Handle;
-	GetWorld()->GetTimerManager().SetTimer(Handle, TimerCallback, 2.0f, false);
 }

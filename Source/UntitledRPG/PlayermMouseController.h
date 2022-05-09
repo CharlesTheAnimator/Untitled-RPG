@@ -13,18 +13,22 @@ UCLASS()
 class UNTITLEDRPG_API APlayermMouseController : public APlayerController
 {
 	GENERATED_BODY()
-	
-protected:
-	virtual void SetupInputComponent() override;
-	virtual void PlayerTick(float DeltaTime) override;
 
 public:
+
 	APlayermMouseController();
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool bAttacking;
 
+protected:
+
+	//Protected Actor & Pawn base class overrides
+	virtual void SetupInputComponent() override;
+	virtual void PlayerTick(float DeltaTime) override;
 
 private:
+
 	bool bAttackCollide;
 	bool bMeshCollide;
 	float DashDistance = 5000;
