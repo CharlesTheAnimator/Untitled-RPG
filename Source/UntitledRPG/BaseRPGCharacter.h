@@ -16,49 +16,53 @@ public:
 	// Sets default values for this character's properties
 	ABaseRPGCharacter();
 
-	//BP_Menu options
-	UPROPERTY(EditAnywhere)
-	bool bMelee; 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	//BP Properties
+	UPROPERTY(EditDefaultsOnly)
+	USceneComponent* ROOT;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Animations)
 	class UBoxComponent* BoxCollisionDefault;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Animations)
+	UStaticMeshComponent* ShieldMesh;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
+	UAnimMontage* BasicAtkAnimMont;
+	UPROPERTY(EditAnywhere)
+	bool bMelee;
 
 protected:
-	// Called when the game starts or when spawned
+
+	//Protected Actor & Pawn base class overrides
 	virtual void BeginPlay() override;
-
-private: 
-	// Private base character data
-	int BasicTimeDelay = 1;
-	FName MeleeSocket;
-	class USceneComponent* ROOT;
-
-public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
+
+private:
+
+	//Private BP Properties
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class UDecalComponent* CursorToWorld;
+	/*Skeletal Mesh Component*/
+	//TODO
+	/*Actor GameplayClass Component*/
+	//TODO
+
+public:
+
+	//Actor & Pawn base class overrides
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	// Called by axis binds
+	//Called by axis bind 
+	//TODO v move to controller v
 	void MoveForward(float);
 	void MoveSideways(float);
 
-	UPROPERTY(EditDefaultsOnly)
-	USceneComponent* PlayerROOT;
-	UPROPERTY(EditDefaultsOnly)
-	UStaticMeshComponent* ShieldMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
-	UAnimMontage* BasicAtk;
 
-	/** Returns CursorToWorld subobject **/
+	//Forceinline header functions
 	FORCEINLINE class UDecalComponent* GetCursorToWorld() { return CursorToWorld; }
 
 private:
-	/** A decal that projects to the cursor location. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UDecalComponent* CursorToWorld;
 
-	/*Skeletal Mesh Component*/
-	//TODO
+	//Private Methods
+	void UpdateCursorDecal();
+
 };

@@ -24,8 +24,6 @@
 // Sets default values
 ABaseRPGCharacter::ABaseRPGCharacter()
 {
-	/*Initialize Socket FName*/
-	MeleeSocket = TEXT("URPGDefautlSocket");
 	
 	/*Init Skeletal Mesh Component*/
 	//TODO
@@ -104,16 +102,9 @@ void ABaseRPGCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	/*Update Cursors decal*/
 	if (CursorToWorld != nullptr) {
-		if (APlayerController* PC = Cast<APlayerController>(GetController()))
-		{
-			FHitResult TraceHitResult;
-			PC->GetHitResultUnderCursor(ECC_Visibility, true, TraceHitResult);
-			FVector CursorFV = TraceHitResult.ImpactNormal;
-			FRotator CursorR = CursorFV.Rotation();
-			CursorToWorld->SetWorldLocation(TraceHitResult.Location);
-			CursorToWorld->SetWorldRotation(CursorR);
-		}
+		UpdateCursorDecal();
 	}
 }
 
@@ -149,5 +140,18 @@ void ABaseRPGCharacter::MoveSideways(float AxisValue)
 
 		const FVector Direction = FRotationMatrix(YawRoto).GetUnitAxis(EAxis::Y);
 		AddMovementInput(Direction, AxisValue);
+	}
+}
+
+void ABaseRPGCharacter::UpdateCursorDecal()
+{
+	if (APlayerController* PC = Cast<APlayerController>(GetController()))
+	{
+		FHitResult TraceHitResult;
+		PC->GetHitResultUnderCursor(ECC_Visibility, true, TraceHitResult);
+		FVector CursorFV = TraceHitResult.ImpactNormal;
+		FRotator CursorR = CursorFV.Rotation();
+		CursorToWorld->SetWorldLocation(TraceHitResult.Location);
+		CursorToWorld->SetWorldRotation(CursorR);
 	}
 }
