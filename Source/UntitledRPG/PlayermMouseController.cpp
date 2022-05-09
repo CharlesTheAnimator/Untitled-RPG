@@ -34,11 +34,12 @@ void APlayermMouseController::SetupInputComponent()
 	InputComponent->BindAction("ShiledBuffActivate", IE_Pressed, this, &APlayermMouseController::InvokeShieldBuff);
 
 	/*Init Axis Bindings*/
-
+	//WASD
+	InputComponent->BindAxis("MoveForward", this, &APlayermMouseController::MoveForward);
+	InputComponent->BindAxis("MoveSideways", this, &APlayermMouseController::MoveSideways);
 }
 
-
-
+/*Tick Calls*/
 void APlayermMouseController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
@@ -49,7 +50,26 @@ void APlayermMouseController::PlayerTick(float DeltaTime)
 	}
 }
 
-/*Basic Attack Function Definitions*/
+/*WASD Locomotion calls to character class*/
+void APlayermMouseController::MoveForward(float AxisValue)
+{
+	ABaseRPGCharacter* CharacterPawn = Cast<ABaseRPGCharacter>(GetCharacter());
+	if (CharacterPawn)
+	{
+		CharacterPawn->MoveForward(AxisValue);
+	}
+}
+
+void APlayermMouseController::MoveSideways(float AxisValue)
+{
+	ABaseRPGCharacter* CharacterPawn = Cast<ABaseRPGCharacter>(GetCharacter());
+	if (CharacterPawn)
+	{
+		CharacterPawn->MoveSideways(AxisValue);
+	}
+}
+
+/*LMB Basic Attack Function Definitions*/
 void APlayermMouseController::StartBasicAttacking()
 {
 	ABaseRPGCharacter* CharacterPawn = Cast<ABaseRPGCharacter>(GetCharacter());
@@ -146,3 +166,5 @@ void APlayermMouseController::RotateToCursor()
 		MyPawn->SetActorRotation(LookDirection.Rotation(), ETeleportType::TeleportPhysics);
 	}
 }
+
+

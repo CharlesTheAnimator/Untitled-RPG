@@ -50,12 +50,9 @@ public:
 	//Actor & Pawn base class overrides
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	//Called by axis bind 
-	//TODO v move to controller v
+	//Called by axis binding in controller 
 	void MoveForward(float);
 	void MoveSideways(float);
-
-
 
 	//Forceinline header functions
 	FORCEINLINE class UDecalComponent* GetCursorToWorld() { return CursorToWorld; }

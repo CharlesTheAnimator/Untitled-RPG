@@ -112,17 +112,11 @@ void ABaseRPGCharacter::Tick(float DeltaTime)
 void ABaseRPGCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 { 
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	/*Locomotion binding*/
-	InputComponent->BindAxis("MoveForward", this, &ABaseRPGCharacter::MoveForward);
-	InputComponent->BindAxis("MoveSideways", this, &ABaseRPGCharacter::MoveSideways);
-
 }
 
+//Locomotion called by controller
 void ABaseRPGCharacter::MoveForward(float AxisValue)
 {
-	//Controller should be oriented to world axis
-	//Only need yaw rotation Pitch and roll do not effect move forward or backward
 	if (Controller != nullptr && AxisValue != 0) {
 		const FRotator Roto = Controller->GetControlRotation();		
 		const FRotator YawRoto(0, Roto.Yaw, 0);				
@@ -131,7 +125,6 @@ void ABaseRPGCharacter::MoveForward(float AxisValue)
 		AddMovementInput(Direction, AxisValue);
 	}
 }
-
 void ABaseRPGCharacter::MoveSideways(float AxisValue)
 {
 	if (Controller != nullptr && AxisValue != 0) {
@@ -143,6 +136,7 @@ void ABaseRPGCharacter::MoveSideways(float AxisValue)
 	}
 }
 
+/*Cursor decal definition*/
 void ABaseRPGCharacter::UpdateCursorDecal()
 {
 	if (APlayerController* PC = Cast<APlayerController>(GetController()))

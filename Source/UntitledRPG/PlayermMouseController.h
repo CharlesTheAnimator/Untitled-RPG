@@ -40,4 +40,9 @@ private:
 	void InvokeShieldBuff();
 
 	void RotateToCursor();
+
+public:
+
+	void MoveForward(float);
+	void MoveSideways(float);
 };
